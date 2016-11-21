@@ -1,0 +1,121 @@
+Forensics 100:
+
+My Lil Droid 100  
+Sometimes not all files are needed. 
+ 
+Download Link: https://drive.google.com/file/d/0Bw7N3lAmY5PCOFNQZFgtSVlFZ3M/view?usp=sharing
+
+Provided an apk file. I unzipped it and did some quick searches for RC3 (which seems common in the flags for this CTF) and flag etc. but nothing. Opened the build-data.properties file and noticed the following base64 looking hash:
+
+UkMz-2016-R09URU0yMQ==
+
+If I remove the -2016- as this already looks to be plain text and decode this hash using the site https://www.base64decode.org/ I get RC3GOTEM21
+
+So I put the -2016- back in and submitted the flag :)
+
+RC3-2016-GOTEM21
+
+
+Forensics 200:
+
+he 3D Design students have been boasting about how they can trade sensitive information without anyone ever knowing. You’ve intercepted one of their USB’s and found this interesting file. Figure out what the hell is going on.
+ 
+Download Link: https://drive.google.com/file/d/0Bw7N3lAmY5PCTWg5YU1uNUk3cmc/view?usp=sharing
+  
+Link is a zip file, containing a .obj file - I did a quick bit of text analysis to see if the flag was hidden in there, then decided to open the image using an online viewer. Nothing was obvious at first, but after rotating the image around a bit and zooming in, I noticed the text of the flag embedded in the actual design drawing.
+
+
+Forensics 400:
+
+Description: We had an employee that was up to no good. Our SIEM caught him uploading files to a website from our file server but we canceled the transmission. We currently have an image of home directory that we store on our server. Take a look for yourself on what he stole.
+ 
+Download Link: https://drive.google.com/file/d/0Bw7N3lAmY5PCUWExQUJVZGVySXc/view?usp=sharing
+ 
+
+We are provided with a disk image. On mounting it there are some interesting files, and a folder called SECRETFI. Looking in this folder we can see a gpg encrypted file. On inspection of the _HISTORY file we see that a Workbook1.xlsx file has been created and encrypted using a private key. And the private key seems to have been uploaded to git. The _VIMINFO file provides the name of the git repo: https://github.com/rc3club/supersecret.git. We import this private key, decrypt the container and are presented with the excel file, but it has a password. In the SECRETFI directory is a file named document.txt that was edited around the time of the encryption according to the _HISTORY file. This has "passowrd123" in it (note the misspelling). This password does not work. I racked my brains for a while, then thought, maybe the user did a typo. Sure enough, password123 is the password, and on sheet2 of the spreadsheet we get the flag in the title:
+
+RC3-2016-SNEAKY21
+
+
+Web 100:
+
+Loaded a page with images of dogs and a bad gateway, and a messge aboput finding Phil. Lots of red herrings regarding Phil, but a link to a stylesheet was at the top of the source, and this contained the flag view-source:https://ctf.rc3.club:3000/doge.css
+
+.philarydufflebag{ /*hiya*/ /*compress your frontend*/ /*here's a flag :)*/ flag:RC3-2016-CanineSS }  
+
+
+Misc 200:
+
+We are provided access to a DNS name server and a domain to search and told that "our DNS server ismisconfigured, it asks more questions than it answers.
+
+I did a request using dig for all records and got the following:
+
+misc200.ctf.rc3.club.	300	IN	TXT	"What is the air-speed velocity of an unladen swallow"
+
+This is a quote from a monty python film, so after trying the actual answer as a DNS request, and monty, and python etc. I watched the clip and the next line is "african or european" so I tried this and no joy. After havign a think, I tried it as a subdomain and got the follwoing:
+
+european.misc200.ctf.rc3.club. 300 IN	TXT	"The roundest knight at king arthurs table was sir cumference. He acquired his size from too
+
+Now I knew the format, I just had to get the answers to the riddles and follow the subdomains to the flag:
+
+pi.european.misc200.ctf.rc3.club. 300 IN TXT	"What is it that no man ever yet did see, which never was, but always is to be?"
+
+tomorrow.pi.european.misc200.ctf.rc3.club. 300 IN TXT "My favorite things in life don't cost any money. It's really clear that the most precious resource we all have is ___"
+
+#dig @ns-920.awsdns-51.net time.tomorrow.pi.european.misc200.ctf.rc3.club -t any
+time.tomorrow.pi.european.misc200.ctf.rc3.club.	300 IN SPF "RC3-2016-cyb3rxr05"
+
+
+crypto 100:
+
+We are given the following:
+
+
+“The fault, dear Brutus, is not in our stars, but in ourselves.” (I.ii.141) Julius Caesar in William Shakespeare’s Julius Caesar
+ 
+Cipher Text: 7sj-ighm-742q3w4t
+ 
+If we take that the format is RC3-2016-********
+
+Then we just need to put this in a table and fill in the gaps (I have marked with asterisks the ones that are 100% positive):
+
+7sj-ighm-742q3w4t
+
+g0*
+h1*
+i2*
+j3*
+k4
+l5
+m6*
+n7
+o8
+p9
+qa
+rb
+sc*
+td
+ue
+vf
+wg
+xh
+yi
+zj
+0k
+1l
+2m
+3n
+4o
+5p
+6q
+7r*
+8s
+9t
+au
+bv
+cw
+dx
+ey
+fz
+
+Then decode the string: rc3-2016-romangod
